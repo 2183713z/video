@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>music</title>
+	<style>
+			@font-face {font-family: 'iconfont';
+    		src: url('font/iconfont.eot'); /* IE9*/
+    		src: url('font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    		url('font/iconfont.woff') format('woff'), /* chrome、firefox */
+    		url('font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    		url('font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+			}
+		.iconfont{
+		    font-family:"iconfont" !important;
+		    font-size:16px;font-style:normal;
+		    -webkit-font-smoothing: antialiased;
+		    -webkit-text-stroke-width: 0.2px;
+		    -moz-osx-font-smoothing: grayscale;}
+		a{
+			text-decoration: none;
+		}
+		.btn i{
+			font-size: 24px;
+			color:red;
+		}
+		#progress-wrap{
+			width: 500px;
+			height: 30px;
+			background-color: #808080;
+			border-radius: 30px;
+			overflow: hidden;	/*进度条刚开始时宽度太小*/
+		}
+		#progress{
+			width:0%;
+			height: 30px;
+			background-color: green;
+			border-radius: 30px;
+		}
+	</style>
+</head>
+<body>
+	 <audio src="source/1.mp3" controls autoplay loop id="music">
+	 	<p>您的浏览器不支持Html audio</p>
+	 </audio>
+	 <div id="progress-wrap">
+	 	<div id="progress"></div>
+	 </div>
+    <p id="anniu">
+    	<a href="javascript:void(0)" class="btn" id="playBtn"><i class="iconfont">&#xe6bb;</i></a>
+    	<a href="javascript:void(0)" class="btn" id="pauseBtn"><i class="iconfont">&#xe696;</i></a>
+    	<a href="javascript:void(0)" class="btn" id="stopBtn"><i class="iconfont">&#xe601;</i></a>
+    </p>
+    <span id="curtime">00:00</span>/
+    <span id="musictime"></span>    
+    <script type="text/javascript">
+    //获取id对象  函数
+   		function G(sId){
+			return document.getElementById(sId);
+		}
+	//时间格式转换函数
+		function coverTime(musicDur){
+			var minute=Math.floor(musicDur/60);
+			var second=Math.floor(musicDur%60);
+			if(minute<10){
+				minute="0"+minute;
+			}
+			if(second<10){
+				second="0"+second;
+			}
+			var finRes=minute+":"+second;
+			return finRes;
+		}
+
+    	window.onload=function(){
+	    	var playBtn=G("playBtn");
+			var pauseBtn=G("pauseBtn");
+			var music=G('music');
+			var stopBtn=G('stopBtn');
+			var musicTime=G('musictime');
+			var curTime=G('curtime');
+			var progress=G('progress');
+		//播放按钮
+			playBtn.addEventListener('click',function(e){
+			  	music.play();
+			  })
+		//暂停按钮
+			pauseBtn.addEventListener('click',function(e){
+			  	music.pause();
+			  	console.log('当前播放到：'+Math.floor(music.currentTime)+'s');
+			  })
+		//重新播放
+			stopBtn.addEventListener('click',function(e){
+				music.currentTime=0;
+			  	music.pause();
+			  })
+		//设置音乐音量
+			music.volume=0.6;
+
+			var musicDur=music.duration;
+			var timeStr=coverTime(musicDur);
+			musicTime.innerHTML= timeStr;
+		//timeupdate   进度条
+			music.addEventListener('timeupdate',function(e){
+				var curT=music.currentTime;
+				var curTi=coverTime(curT);
+				curTime.innerHTML=curTi;
+				var per=Math.floor((music.currentTime/music.duration)*100);
+				progress.style.width=per+'%';
+			})
+		
+    	}
+    </script>
+</body>
+</html>
